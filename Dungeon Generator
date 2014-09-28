@@ -1,0 +1,162 @@
+/*This Source Code Form is subject to the terms of the 
+ *Mozilla Public License, v. 2.0. If a copy of the MPL
+ *was not distributed with this file, You can obtain one
+ *at http://mozilla.org/MPL/2.0/.
+ */
+
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+
+import javax.swing.JFrame;
+import java.util.Random;
+import java.util.ArrayList;
+//import java.util.Scanner;
+
+public class DungeonMaker extends JFrame {
+
+	public static int tilecounter = 1;
+	public static int dungeonSize;
+	public static int Nroom;
+	
+	public DungeonMaker(){
+		setSize(new Dimension(dungeonSize, dungeonSize));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
+		//set the size of the window
+		//stop operating on closing it
+	}
+	
+	public static void main(String arg[]){
+		//Scanner reader = new Scanner(System.in);
+		//System.out.println("Input desired dungeon dimension:");
+		dungeonSize = 1000; //reader.nextInt();
+		//System.out.println("Input number of rooms:");
+		Nroom = 10;//reader.nextInt();
+		//reader.close();
+		new DungeonMaker(); //open the frame
+	}
+	
+	public void paint(Graphics tile){
+		int currentX = dungeonSize/2;
+		int currentY = dungeonSize/2;
+		int tempX = 0;
+		int tempY = 0;
+		Random randNum = new Random();
+		double Naccept = 0;
+		int Nrand = 0;
+		int rmCent;
+		ArrayList<Integer> Xarr = new ArrayList<Integer>();
+		ArrayList<Integer> Yarr = new ArrayList<Integer>();
+		//****MAKE ARRAYLISTS FOR EASY COMPARISON****
+		//These arrays are meant to hold/sort positions of tiles
+		//This is to prevent double counting a spot for tiles
+		
+		tile.setColor(Color.RED); //dungeon tiles are red
+		tile.fillRect(currentX, currentY, 20, 20); //starting position
+		Xarr.add(currentX);
+		Yarr.add(currentY);
+		while(tilecounter <= dungeonSize/15){ //dungeons too cis
+			Nrand = randNum.nextInt(4);
+			//System.out.println(Nrand);
+			switch(Nrand){
+				case 0: {
+					tempX = currentX + 20;
+					tempY = currentY;
+					break;
+				}
+				case 1:{
+					tempX = currentX - 20;
+					tempY = currentY;
+					break;
+				}
+				case 2:{
+					tempX = currentX;
+					tempY = currentY + 20;
+					break;
+				}
+				case 3:{
+					tempX = currentX;
+					tempY = currentY - 20;
+					break;
+				}
+			}
+			if(tempX >= 8 && tempX <= dungeonSize && tempY >= 8 && tempY <= dungeonSize){
+				Naccept = randNum.nextDouble(); //*(13 - 0.2*tilecounter);
+				if(Naccept > 0.3 && (!Xarr.contains(tempX) || !Yarr.contains(tempY))){
+					//check to see if location already has tile
+					tile.fillRect(tempX, tempY, 20, 20);
+					Xarr.add(tempX);
+					Yarr.add(tempY);
+					//each index corresponds to an (X,Y) for tiles
+					currentX = tempX;
+					currentY = tempY;
+					tilecounter++;
+					
+					//for some reason tilecounter goes from 1 - 11 twice
+				}
+				
+			}
+			Nrand = randNum.nextInt(10);
+			if(Nrand < 4 && tilecounter > 10){
+				Nrand = randNum.nextInt(Xarr.size());
+				currentX = Xarr.get(Nrand);
+				currentY = Yarr.get(Nrand);
+			}
+					
+		}
+		//System.out.println(tilecounter);
+		//currently this while loop seems to make "hallways"
+		//backbone of a dungeon
+		//perhaps pull up some locations and build rooms in them?
+		
+		//make a room at some random location along path:
+		for(int r = 1; r < Nroom; r++){
+			rmCent = randNum.nextInt(Xarr.size());
+			tempX = Xarr.get(rmCent);
+			tempY = Yarr.get(rmCent);
+		//	System.out.println("original size: " + Xarr.size());
+			for(int x = tempX-20; x <= tempX+20; x=x+20){
+				for(int y = tempY-20; y<= tempY+20; y=y+20){
+					if(!Xarr.contains(x) || !Yarr.contains(y)){
+					//	
+						
+						Xarr.add(x);
+						Yarr.add(y);
+					}
+					tile.fillRect(x, y, 20, 20);
+				//	System.out.println(x+" "+y);
+				}
+				
+				
+			}
+			//tile.setColor(Color.BLUE);
+			//System.out.println("new size: " + Xarr.size());
+			tile.fillRect(tempX, tempY, 60, 60);	
+		}
+		
+		//pick spots for traps and treasure
+		int Ntrap = randNum.nextInt(Nroom/4);
+		int Ntreas = randNum.nextInt(Nroom/4);
+		for(int n=0; n <= Ntrap; n++){
+			rmCent = randNum.nextInt(Xarr.size());
+			tempX = Xarr.get(rmCent);
+			tempY = Yarr.get(rmCent);
+			tile.setColor(Color.YELLOW);
+			tile.fillOval(tempX, tempY, 10, 10);
+		}
+		for(int n=0; n <= Ntreas; n++){
+			rmCent = randNum.nextInt(Xarr.size());
+			tempX = Xarr.get(rmCent);
+			tempY = Yarr.get(rmCent);
+			tile.setColor(Color.BLUE);
+			tile.fillOval(tempX, tempY, 10, 10);
+		}
+		//arraylists may contain non-filled tiles bc traps and treas
+		//are appearing outside of dungeon
+		
+		
+	}
+	
+	
+}
