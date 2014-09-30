@@ -1,0 +1,131 @@
+/*This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+If a copy of the MPL was not distributed with this file, 
+You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
+
+(function () {
+    "use strict";
+
+    var app = WinJS.Application;
+    var activation = Windows.ApplicationModel.Activation;
+
+    app.onactivated = function (args) {
+        if (args.detail.kind === activation.ActivationKind.launch) {
+            if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
+                // TODO: This application has been newly launched. Initialize
+                // your application here.
+            } else {
+                // TODO: This application has been reactivated from suspension.
+                // Restore application state here.
+            }
+            args.setPromise(WinJS.UI.processAll());
+
+            var dunButton = document.getElementById("dungButton");
+            dunButton.addEventListener("click", dungButtonClicked, false);
+        }
+    };
+
+    app.oncheckpoint = function (args) {
+        // TODO: This application is about to be suspended. Save any state
+        // that needs to persist across suspensions here. You might use the
+        // WinJS.Application.sessionState object, which is automatically
+        // saved and restored across suspension. If you need to complete an
+        // asynchronous operation before your application is suspended, call
+        // args.setPromise().
+    };
+
+    var tileCounter = new Number(1);
+
+    function isInArray(value, index, ar) {
+           if (value == this.value)
+               return true;  //when calling, do some(isInArray, number)
+    } //not functioning properly
+
+    function dungButtonClicked(eventInfo) {
+        //Generate the dungeon map
+        var dungMap = document.getElementById("dungeonMap");
+        var tile = dungMap.getContext("2d");
+        var tileOut = dungMap.getContext("2d");
+        tile.fillStyle = "red";
+        tileOut.strokeStyle = "black";
+       // context.fillRect(15, 15, 20, 20);
+
+        var currentX = new Number(200);
+        var currentY = new Number(200);
+        var tempX = new Number(0);
+        var tempY = new Number(0);
+        var Xarr = new Array();
+        var Yarr = new Array();
+        var Nrand = new Number(0);
+        var Naccept = new Number(0);
+        var length = new Number(0);
+
+        tile.fillRect(currentX, currentY, 20, 20);
+        tileOut.strokeRect(currentX, currentY, 20, 20);
+        Xarr[0] = currentX;
+        Yarr[0] = currentY;
+        
+        while (tileCounter <= 30) {
+                Nrand = Math.round(Math.random() * 3);
+            switch (Nrand) {
+                case 0: {
+                    tempX = currentX + 20;
+                    tempY = currentY;
+                    break;
+                }
+                case 1: {
+                    tempX = currentX - 20;
+                    tempY = currentY;
+                    break;
+                }
+                case 2: {
+                    tempX = currentX;
+                    tempY = currentY + 20;
+                    break;
+                }
+                case 3: {
+                    tempX = currentX;
+                    tempY = currentY - 20;
+                    break;
+                }
+            }
+            //position of next tile updated
+
+            if (tempX >= 8 && tempX <= 500 && tempY >= 8 && tempY <= 500) {
+                Naccept = Math.random();
+                if (Naccept > 0.3 && (!Xarr.some(isInArray, tempX) || !Yarr.some(isinArray, tempY))) {
+                    tile.fillRect(tempX, tempY, 20, 20);
+                    tileOut.strokeRect(tempX, tempY, 20, 20);
+                    Xarr.push(tempX);
+                    Yarr.push(tempY);
+                    currentX = tempX;
+                    currentY = tempY;
+                    tileCounter++;
+                   
+                }
+            }
+            else {
+                length = Xarr.length;
+                Nrand = Math.round(Math.random() * (length - 1));
+                currentX = Xarr[Nrand];
+                currentY = Yarr[Nrand];
+            }
+            //tile added (random chance) and positions updated if tile is added
+
+            Nrand = Math.random();
+            if (Nrand < 0.4 && tileCounter >= 8) {
+                length = Xarr.length;
+                Nrand = Math.round(Math.random() * (length - 1));
+                currentX = Xarr[Nrand];
+                currentY = Yarr[Nrand];
+            }
+            
+            //chance to randomly change location of current tile
+            //leads to dungeon branching
+        }
+        //document.write(tileCounter + " ");
+        document.getElementById("totalTiles").innerText = Xarr.length;
+
+    }
+    app.start();
+})();
