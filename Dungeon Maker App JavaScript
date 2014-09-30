@@ -22,8 +22,19 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
 
             var dunButton = document.getElementById("dungButton");
             dunButton.addEventListener("click", dungButtonClicked, false);
+
+
         }
     };
+
+  
+
+    app.onready = function (args) {
+        if (wasClicked) {
+            var dunButton2 = document.getElementById("dungButton");
+            dunButton2.addEventListener("click", dungButtonClicked, false);
+        }
+    }
 
     app.oncheckpoint = function (args) {
         // TODO: This application is about to be suspended. Save any state
@@ -34,18 +45,31 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
         // args.setPromise().
     };
 
-    var tileCounter = new Number(1);
+    var tileCounter;
+    var wasClicked = new Boolean;
+    wasClicked = false;
+    var Xarr = new Array();
+    var Yarr = new Array();
+
 
     function isInArray(value, index, ar) {
-           if (value == this.value)
+           if (value == this)
                return true;  //when calling, do some(isInArray, number)
     } //not functioning properly
 
     function dungButtonClicked(eventInfo) {
+        wasClicked = true;
+        
         //Generate the dungeon map
         var dungMap = document.getElementById("dungeonMap");
         var tile = dungMap.getContext("2d");
         var tileOut = dungMap.getContext("2d");
+
+        tile.clearRect(0, 0, 1000, 1000);
+        Xarr = [];
+        Yarr = [];
+        tileCounter = 1;
+
         tile.fillStyle = "red";
         tileOut.strokeStyle = "black";
        // context.fillRect(15, 15, 20, 20);
@@ -54,9 +78,8 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
         var currentY = new Number(200);
         var tempX = new Number(0);
         var tempY = new Number(0);
-        var Xarr = new Array();
-        var Yarr = new Array();
-        var Nrand = new Number(0);
+       
+        var Nrand;
         var Naccept = new Number(0);
         var length = new Number(0);
 
@@ -65,8 +88,8 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
         Xarr[0] = currentX;
         Yarr[0] = currentY;
         
-        while (tileCounter <= 30) {
-                Nrand = Math.round(Math.random() * 3);
+        while (tileCounter < 30) { //not stuck in infinite loop
+            Nrand = Math.round(Math.random() * 3);
             switch (Nrand) {
                 case 0: {
                     tempX = currentX + 20;
@@ -88,21 +111,23 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
                     tempY = currentY - 20;
                     break;
                 }
+               
             }
             //position of next tile updated
 
-            if (tempX >= 8 && tempX <= 500 && tempY >= 8 && tempY <= 500) {
-                Naccept = Math.random();
-                if (Naccept > 0.3 && (!Xarr.some(isInArray, tempX) || !Yarr.some(isinArray, tempY))) {
+            if (tempX >= 8 && tempX <= 500 && tempY >= 8 && tempY <= 500 &&
+                (!(Xarr.some(isInArray, tempX)) || !(Yarr.some(isInArray, tempY)))) {
+               // Naccept = Math.random();
+                if (Math.random() > 0.5) {
                     tile.fillRect(tempX, tempY, 20, 20);
                     tileOut.strokeRect(tempX, tempY, 20, 20);
-                    Xarr.push(tempX);
+                    Xarr.push(tempX); 
                     Yarr.push(tempY);
+                    //document.write(Xarr[Xarr.length - 1] + " ");
                     currentX = tempX;
                     currentY = tempY;
                     tileCounter++;
-                   
-                }
+                  }
             }
             else {
                 length = Xarr.length;
@@ -112,8 +137,8 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
             }
             //tile added (random chance) and positions updated if tile is added
 
-            Nrand = Math.random();
-            if (Nrand < 0.4 && tileCounter >= 8) {
+        
+            if (Math.random() < 0.4 && tileCounter >= 8) {
                 length = Xarr.length;
                 Nrand = Math.round(Math.random() * (length - 1));
                 currentX = Xarr[Nrand];
