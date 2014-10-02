@@ -19,28 +19,33 @@
 </head>
 <body>
     <h1>Welcome to Dungeon Maker!</h1>
-    <p>Select your desired dungeon size</p>
-    <select>
-        <option>Small</option>
-        <option>Medium</option>
-        <option>Large</option>
-    </select>
+    <fieldset id="sizeControl">
+        <legend>Choose a dungeon size:</legend>
+        <select id="sizePick">
+            <option value="small" >Small</option>
+            <option value="medium">Medium</option>
+            <option value="large">Large</option>
+        </select>
+    </fieldset>
 
     <div style="margin: 20px">
         <fieldset class="controlGroup verticalStacking">
             <legend class="controlGroupName">Choose your dungeon accessories:</legend>
-            <label><input id="traps" type="checkbox" class="DungeonMaker" />Traps</label>
+            <label><input id="traps" type="checkbox" class="DungeonBox" />Traps (Red)</label>
             <br />
-            <label><input id="treasure" type="checkbox" class="DungeonMaker" />Treasure</label>
+            <label><input id="treasure" type="checkbox" class="DungeonBox" />Treasure (Blue)</label>
+            <br />
+            <label><input id="encounter" type="checkbox" class="DungeonBox" />Enemies (Green)</label>
         </fieldset>
     </div>
 
-    <p>Number of tiles: </p>
     <div id="totalTiles"></div>
 
     <button id="dungButton">Make a dungeon!</button>
+
+    <button id="itemButton">Populate your dungeon!</button>
     
-    <canvas id="dungeonMap" width="400" height="400"></canvas>
+    <canvas id="dungeonMap" width="450" height="450"></canvas>
 
 
 </body>
