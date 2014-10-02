@@ -23,17 +23,26 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
             var dunButton = document.getElementById("dungButton");
             dunButton.addEventListener("click", dungButtonClicked, false);
 
+            var itButton = document.getElementById("itemButton");
+            itButton.addEventListener("click", itemButtonClicked, false);
 
+            // sizeChoice.addEventListener("change", handleChange, false);
         }
     };
 
   
 
     app.onready = function (args) {
-        if (wasClicked) {
+        if (dwasClicked) {
             var dunButton2 = document.getElementById("dungButton");
             dunButton2.addEventListener("click", dungButtonClicked, false);
         }
+
+        if (itemWasClicked) {
+            var itButton2 = document.getElementById("itemButton");
+            itButton2.addEventListener("click", itemButtonClicked, false);
+        }
+
     }
 
     app.oncheckpoint = function (args) {
@@ -46,11 +55,19 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
     };
 
     var tileCounter;
-    var wasClicked = new Boolean;
-    wasClicked = false;
+    var dwasClicked = new Boolean;
+    dwasClicked = false;
+    var itemWasClicked = false;
     var Xarr = new Array();
     var Yarr = new Array();
-
+    var Xroom = new Array();
+    var Yroom = new Array();
+    var itemXArr = new Array();
+    var itemYArr = new Array();
+    var Nroom = 15;
+    var rmCent;
+    var tileSize = 10;
+    var tileLimit;
 
     function isInArray(value, index, ar) {
            if (value == this)
@@ -58,8 +75,27 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
     } //not functioning properly
 
     function dungButtonClicked(eventInfo) {
-        wasClicked = true;
+        dwasClicked = true;
+
+        var sizeChoice = document.getElementById("sizePick").value;
+        // document.getElementById("totalTiles").innerText = sizeChoice;
+        if (sizeChoice == "small"){
+            tileSize = 20;
+            tileLimit = 35;
+        }
+        else if (sizeChoice == "medium"){
+            tileSize = 15;
+            tileLimit = 50;
+        }
+            
+        else{
+            tileSize = 10;
+            tileLimit = 75;
+        }
         
+        itemXArr = [];
+        itemYArr = [];
+
         //Generate the dungeon map
         var dungMap = document.getElementById("dungeonMap");
         var tile = dungMap.getContext("2d");
@@ -70,64 +106,62 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
         Yarr = [];
         tileCounter = 1;
 
-        tile.fillStyle = "red";
+        tile.fillStyle = "white";
         tileOut.strokeStyle = "black";
-       // context.fillRect(15, 15, 20, 20);
-
-        var currentX = new Number(200);
-        var currentY = new Number(200);
+        
+        var currentX = new Number(100);
+        var currentY = new Number(100);
         var tempX = new Number(0);
         var tempY = new Number(0);
-       
+        
         var Nrand;
         var Naccept = new Number(0);
         var length = new Number(0);
 
-        tile.fillRect(currentX, currentY, 20, 20);
-        tileOut.strokeRect(currentX, currentY, 20, 20);
+        tile.fillRect(currentX, currentY, tileSize, tileSize);
+        tileOut.strokeRect(currentX, currentY, tileSize, tileSize);
         Xarr[0] = currentX;
         Yarr[0] = currentY;
         
-        while (tileCounter < 30) { //not stuck in infinite loop
-            Nrand = Math.round(Math.random() * 3);
-            switch (Nrand) {
+        while (tileCounter < tileLimit) { 
+            switch (Math.round((Math.random()*100)) % 4) { //the dung tiles are straight lines...
                 case 0: {
-                    tempX = currentX + 20;
+                    tempX = currentX + tileSize;
                     tempY = currentY;
                     break;
                 }
                 case 1: {
-                    tempX = currentX - 20;
+                    tempX = currentX - tileSize;
                     tempY = currentY;
                     break;
                 }
                 case 2: {
                     tempX = currentX;
-                    tempY = currentY + 20;
+                    tempY = currentY + tileSize;
                     break;
                 }
                 case 3: {
                     tempX = currentX;
-                    tempY = currentY - 20;
+                    tempY = currentY - tileSize;
                     break;
                 }
                
             }
             //position of next tile updated
 
-            if (tempX >= 8 && tempX <= 500 && tempY >= 8 && tempY <= 500 &&
+            if (tempX >= 8 && tempX <= 400 && tempY >= 8 && tempY <= 400 &&
                 (!(Xarr.some(isInArray, tempX)) || !(Yarr.some(isInArray, tempY)))) {
-               // Naccept = Math.random();
-                if (Math.random() > 0.5) {
-                    tile.fillRect(tempX, tempY, 20, 20);
-                    tileOut.strokeRect(tempX, tempY, 20, 20);
-                    Xarr.push(tempX); 
-                    Yarr.push(tempY);
-                    //document.write(Xarr[Xarr.length - 1] + " ");
-                    currentX = tempX;
-                    currentY = tempY;
-                    tileCounter++;
-                  }
+                // Naccept = Math.random();
+                //if () {
+                tile.fillRect(tempX, tempY, tileSize, tileSize);
+                tileOut.strokeRect(tempX, tempY, tileSize, tileSize);
+                Xarr.push(tempX); 
+                Yarr.push(tempY);
+                //document.write(Xarr[Xarr.length - 1] + " ");
+                currentX = tempX;
+                currentY = tempY;
+                tileCounter++;
+                //  }
             }
             else {
                 length = Xarr.length;
@@ -138,19 +172,125 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
             //tile added (random chance) and positions updated if tile is added
 
         
-            if (Math.random() < 0.4 && tileCounter >= 8) {
-                length = Xarr.length;
-                Nrand = Math.round(Math.random() * (length - 1));
-                currentX = Xarr[Nrand];
-                currentY = Yarr[Nrand];
-            }
+            // if (Math.random() < 0.7 && tileCounter >= 5) {
+            //      length = Xarr.length;
+            //      Nrand = Math.round(Math.random() * (length - 1));
+            //     currentX = Xarr[Nrand];
+            //      currentY = Yarr[Nrand];
+            //  }
             
             //chance to randomly change location of current tile
             //leads to dungeon branching
+        
+
+            //Dungeon Rooms
+            //if (tileCounter % 15 == 0) {
+                
         }
-        //document.write(tileCounter + " ");
-        document.getElementById("totalTiles").innerText = Xarr.length;
+        if (sizeChoice == "large")
+            tileLimit = 90;
+
+        for(var r=0; r<tileLimit/2; r++){
+            rmCent = Math.round(Math.random() * (Xarr.length - 1));
+            tempX = Xarr[rmCent];
+            tempY = Yarr[rmCent];
+
+            switch (Math.round(Math.random() * 8)) {
+                case 0: { tempX += tileSize; break; }
+                case 1: { tempX -= tileSize; break; }
+                case 2: { tempY += tileSize; break; }
+                case 3: { tempY -= tileSize; break; }
+                case 4: { tempX += tileSize; tempY += tileSize; break; }
+                case 5: { tempX -= tileSize; tempY += tileSize; break; }
+                case 6: { tempX += tileSize; tempY -= tileSize; break; }
+                case 7: { tempX -= tileSize; tempY -= tileSize; break; }
+                case 8: break;
+            }
+            //randomly pick a part of the room to be the center
+
+            Xroom.push(tempX);
+            Yroom.push(tempY);
+            for (var xind = tempX - tileSize; xind <= tempX + tileSize; xind += tileSize) {
+                for (var yind = tempY - tileSize; yind <= tempY + tileSize; yind += tileSize) {
+                    // if (!(Xarr.some(isInArray, xind)) || !(Yarr.some(isInArray, yind))) {
+                    Xarr.push(xind);
+                    Yarr.push(yind);
+                    //  document.getElementById("totalTiles").innerText = Xarr.length;                        
+                    tile.fillRect(xind, yind, tileSize, tileSize);
+                    tileOut.strokeRect(xind, yind, tileSize, tileSize);
+                    //}
+                }
+            }   //So far this is double counting rooms to bias where traps and treasure is put
+            //want it biased toward rooms. Besides the if statement wasn't working
+        }
 
     }
+        
+    
+
+
+    function itemButtonClicked(eventInfo) {
+        itemWasClicked = true;
+
+        var dungMap = document.getElementById("dungeonMap");
+        var trap = dungMap.getContext("2d");
+        var treas = dungMap.getContext("2d");
+        var enc = dungMap.getContext("2d");
+
+        for (var it = 0; it <= itemXArr.length; it++) {
+            trap.fillStyle = "white";
+            trap.fillRect(itemXArr[it]-1, itemYArr[it]-1, tileSize / 1.5, tileSize/1.5);
+        }
+        //clear old items
+        itemXArr = [];
+        itemYArr = [];
+
+        //traps & treasure
+        WinJS.Utilities.query(".DungeonBox").forEach(function (checkbox) {
+            //document.getElementById("totalTiles").innerText = checkbox.checked;
+            if (checkbox.id == "traps" && checkbox.checked) {
+                //document.getElementById("totalTiles").innerText = "yes";
+
+                var Ntrap = Math.round(Math.random() * Nroom / 2);
+                trap.fillStyle = "red";
+                for (var ntp = 0; ntp <= Ntrap; ntp++) {
+                    rmCent = Math.round(Math.random() * (Xarr.length - 1));
+                    //tile.clearRect(Xarr[rmCent], Yarr[rmCent], 10, 10);
+                    trap.fillRect(Xarr[rmCent] + tileSize / 4, Yarr[rmCent] + tileSize / 4, tileSize / 1.5-2, tileSize/1.5-2);
+                    itemXArr.push(Xarr[rmCent] + tileSize/4);
+                    itemYArr.push(Yarr[rmCent] + tileSize/4);
+                }
+                //try weighting trap location to open areas and entrances
+
+            }
+            if (checkbox.id == "treasure" && checkbox.checked) {
+                var Ntreas = Math.round(Math.random() * Nroom / 3);
+                treas.fillStyle = "blue";
+                for (var nts = 0; nts <= Ntreas; nts++) {
+                    rmCent = Math.round(Math.random() * (Xarr.length - 1));
+                    treas.fillRect(Xarr[rmCent] + tileSize/4, Yarr[rmCent] + tileSize / 4, tileSize / 1.5-2, tileSize / 1.5-2);
+                    itemXArr.push(Xarr[rmCent] + tileSize/4);
+                    itemYArr.push(Yarr[rmCent] + tileSize/4);
+                }
+            }  //try weighting treasure location to rooms (with encounters ideally)
+
+            if (checkbox.id == "encounter" && checkbox.checked) {
+                var Nenc = Math.round(Math.random() * Nroom / 3);
+                enc.fillStyle = "green";
+                for (var nenc = 0; nenc <= Nenc; nenc++) {
+                    rmCent = Math.round(Math.random() * (Xarr.length - 1));
+                    enc.fillRect(Xarr[rmCent] + tileSize/4, Yarr[rmCent] + tileSize / 4, tileSize / 1.5-2, tileSize / 1.5-2);
+                    itemXArr.push(Xarr[rmCent] + tileSize/4);
+                    itemYArr.push(Yarr[rmCent] + tileSize/4);
+                }
+
+            }
+
+
+        });
+
+    }
+
+
     app.start();
 })();
