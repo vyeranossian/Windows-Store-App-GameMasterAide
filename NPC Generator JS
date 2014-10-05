@@ -1,0 +1,118 @@
+// This Source Code Form is subject to the terms of 
+// the Mozilla Public License, v. 2.0. 
+// If a copy of the MPL was not distributed with this file,
+// You can obtain one at http://mozilla.org/MPL/2.0/.
+(function () {
+    "use strict";
+
+    var app = WinJS.Application;
+    var activation = Windows.ApplicationModel.Activation;
+
+    app.onactivated = function (args) {
+        if (args.detail.kind === activation.ActivationKind.launch) {
+            if (args.detail.previousExecutionState !== activation.ApplicationExecutionState.terminated) {
+                // TODO: This application has been newly launched. Initialize
+                // your application here.
+            } else {
+                // TODO: This application has been reactivated from suspension.
+                // Restore application state here.
+            }
+            args.setPromise(WinJS.UI.processAll());
+
+            var readButton = document.getElementById("GenerateNPC").addEventListener("click", readText, false);
+
+        }
+    };
+
+    app.oncheckpoint = function (args) {
+        // TODO: This application is about to be suspended. Save any state
+        // that needs to persist across suspensions here. You might use the
+        // WinJS.Application.sessionState object, which is automatically
+        // saved and restored across suspension. If you need to complete an
+        // asynchronous operation before your application is suspended, call
+        // args.setPromise().
+    };
+
+    var arrayKey = new Array();
+    var Human = new Array();
+    var Dwarf = new Array();
+    var HumanL = new Array(); //L = last name
+    var DwarfL = new Array();
+    var Personality = new Array();
+    var Description = new Array();
+    arrayKey = [Human, Dwarf, HumanL, DwarfL, Personality, Description];
+
+    //the array of Keys for our hashtable
+
+    function readText() {
+        var file = document.getElementById("fileInput").files[0];
+
+        if (file) {
+            var fileReader = new FileReader();
+            fileReader.onload = fileLoaded;
+            // fileReader.onerror = fileError;
+
+            fileReader.readAsText(file);
+
+        }
+    }
+    function fileLoaded(evt) {
+        var output = evt.target.result;
+        var totalInd = 0, start = 0, key, midInd = 0, entry, randNum;
+        while (totalInd < output.length) {
+            if (output.charAt(totalInd) == ":") midInd = totalInd;
+            if (output.charAt(totalInd) == "&") {
+                entry = output.substring(midInd + 1, totalInd);
+                key = output.substring(start, midInd);
+                if (key == "Human") Human.push(entry);
+                if (key == "Dwarf") Dwarf.push(entry);
+                if (key == "HumanL") HumanL.push(entry);
+                if (key == "DwarfL") DwarfL.push(entry);
+                if (key == "Personality") Personality.push(entry);
+                if (key == "Description") Description.push(entry);
+
+                start = totalInd + 1;
+            }
+            totalInd++;
+        }
+        //Put strings into the "hashtable"
+        var race, name, desc = "";
+        var raceSelect = document.getElementById("raceChoice").value;
+
+        if (raceSelect == "Human") {
+            race = "Human";
+            name = Human[Math.round(Math.random() * (Human.length - 1))] + " " + HumanL[Math.round(Math.random() * (HumanL.length - 1))];
+        }
+        else if (raceSelect == "Dwarf") {
+            race = "Dwarf";
+            name = Dwarf[Math.round(Math.random() * (Dwarf.length - 1))] + " " + DwarfL[Math.round(Math.random() * (DwarfL.length - 1))];
+        }
+        else {
+            randNum = Math.round(Math.random());
+            if (randNum == 0) {
+                race = "Human";
+                name = Human[Math.round(Math.random() * (Human.length - 1))] + " " + HumanL[Math.round(Math.random() * (HumanL.length - 1))];
+            }
+            if (randNum == 1) {
+                race = "Dwarf";
+                name = Dwarf[Math.round(Math.random() * (Dwarf.length - 1))] + " " + DwarfL[Math.round(Math.random() * (DwarfL.length - 1))];
+            }
+        }
+        for (var num = 0; num < 3; num++) {
+            randNum = Math.round(Math.random() * (Description.length));
+            desc = desc + "\n" + Description[randNum];
+        }
+
+        document.getElementById("writeRace").innerText = "Race: " + race;
+        document.getElementById("writeName").innerText = "Name: " + name;
+        document.getElementById("writePersonality").innerText = "Personality: " + Personality[Math.round(Math.random() * (Personality.length - 1))];
+        document.getElementById("writeDescription").innerText = "Description: " + desc;
+
+
+        //above statement prints out the 10th Dwarf name in the list (without their key)
+        return true;
+    }
+
+
+    app.start();
+})();
