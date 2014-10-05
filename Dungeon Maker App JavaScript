@@ -43,6 +43,9 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
             itButton2.addEventListener("click", itemButtonClicked, false);
         }
 
+        var savButton = document.getElementById("saveButton");
+        savButton.addEventListener("click", saveButtonClicked, false);
+
     }
 
     app.oncheckpoint = function (args) {
@@ -227,7 +230,8 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
     }
         
     
-
+    var dungMap = document.getElementById("dungeonMap");
+   // var dungImage = document.createElement("dungMap");
 
     function itemButtonClicked(eventInfo) {
         itemWasClicked = true;
@@ -290,6 +294,39 @@ You can obtain one at http://mozilla.org/MPL/2.0/.
         });
 
     }
+
+    function saveButtonClicked(eventInfo) { //WORKING
+        //var imgData = 
+        var mapFileName = "dungeonMap" + Math.round((new Date()).getTime() / 1000);
+        var dungMap = document.getElementById("dungeonMap");
+        var pics = Windows.Storage.KnownFolders.picturesLibrary; //output stream for file
+        var mapContents, imgData;
+        var Imaging = Windows.Graphics.Imaging;
+
+        //creating the file
+        pics.createFileAsync(mapFileName, Windows.Storage.CreationCollisionOption.replaceExisting).then(function (file){
+            if (file)
+                return file.openAsync(Windows.Storage.FileAccessMode.readWrite);
+        }).then(function (stream) {
+            //get canvas data
+            
+            mapContents = dungMap.getContext("2d");
+            imgData = mapContents.getImageData(0, 0, dungMap.width, dungMap.height);
+
+            return Imaging.BitmapEncoder.createAsync(Imaging.BitmapEncoder.pngEncoderId, stream);
+        }).then(function (encoder) {
+            //set pixel data in encoder
+            encoder.setPixelData(Imaging.BitmapPixelFormat.rgba8, Imaging.BitmapAlphaMode.straight, dungMap.width, dungMap.height, 96, 96, new Uint8Array(imgData.data));
+
+            //encode
+            return encoder.flushAsync();
+        }).then(null, function (error) {});
+            
+        }
+
+       
+      
+
 
 
     app.start();
