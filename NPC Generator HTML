@@ -1,0 +1,42 @@
+<!--This Source Code Form is subject to the terms of 
+    the Mozilla Public License, v. 2.0. 
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>App3</title>
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.2.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.2.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.2.0/js/ui.js"></script>
+
+    <!-- App3 references -->
+    <link href="/css/default.css" rel="stylesheet" />
+    <script src="/js/default.js"></script>
+</head>
+<h1>Description Generator</h1>
+<body>
+
+    <div id="FileReadTextInput" data-win-control="SdkSample.ScenarioInput">
+        <p>Get a text file from disk by using <b>input type='file'</b> and read the text value</p>
+        <input id="fileInput" type="file" accept="text/plain" />
+        <button id="GenerateNPC" class="action">Generate NPC</button>
+    </div>
+
+    <div>Choose a race:</div>
+    <select id="raceChoice">
+        <option value="Random">Random</option>
+        <option value="Human">Human</option>
+        <option value="Dwarf">Dwarf</option>
+    </select>
+    <div id="writeRace"></div>
+    <div id="writeName"></div>
+    <div id="writePersonality"></div>
+    <div id="writeDescription"></div>
+
+</body>
+</html>
