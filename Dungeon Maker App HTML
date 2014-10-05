@@ -39,12 +39,12 @@
         </fieldset>
     </div>
 
-    <div id="totalTiles"></div>
-
     <button id="dungButton">Make a dungeon!</button>
 
     <button id="itemButton">Populate your dungeon!</button>
-    
+
+    <button id="saveButton">Save your dungeon</button>
+   
     <canvas id="dungeonMap" width="450" height="450"></canvas>
 
 
