@@ -44,7 +44,7 @@
                     </div>         
                 </div>
                
-                    <div class="section3" data-win-control="WinJS.UI.HubSection" data-win-res="{ winControl: {'header': 'Section3'} }"
+                    <div class="section" data-win-control="WinJS.UI.HubSection" data-win-res="{ winControl: {'header': 'Section'} }"
                          data-win-options="{ header: 'Choose a generator:', isHeaderStatic: true }">
                         <div class="itemTemplate" data-win-control="WinJS.Binding.Template">
                             <img src="#" data-win-bind="src: backgroundImage; alt: title" />
@@ -54,7 +54,7 @@
                         <div class="itemslist win-selectionstylefilled" data-win-control="WinJS.UI.ListView" data-win-options="{
                         layout: {type: WinJS.UI.GridLayout},
                         selectionMode: 'none',
-                        itemTemplate: select('.section3 .itemTemplate'),
+                        itemTemplate: select('.section .itemTemplate'),
                         itemDataSource: select('.pagecontrol').winControl.section3DataSource,
                         oniteminvoked: select('.pagecontrol').winControl.section3ItemNavigate
                     }">
