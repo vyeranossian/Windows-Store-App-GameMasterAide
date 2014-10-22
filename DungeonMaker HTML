@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<!-- This Source Code Form is subject to the terms of the
+     Mozilla Public License, v. 2.0. If a copy of the MPL
+     was not distributed with this file, 
+    You can obtain one at http://mozilla.org/MPL/2.0/. -->
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Dungeon_Maker</title>
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.2.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.2.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.2.0/js/ui.js"></script>
+
+    <!-- Dungeon_Maker references -->
+    <link href="/css/default.css" rel="stylesheet" />
+    <script src="/js/default.js"></script>
+</head>
+<body>
+
+    <div class="dungMap fragment">
+        <header aria-label="Header content" role="banner">
+            <button data-win-control="WinJS.UI.BackButton"></button>
+            <h1 class="titlearea win-type-ellipsis">
+                <span class="DMtitle">Dungeon Maker</span>
+            </h1>
+        </header>
+        <section class="content" aria-label="Main content" role="main">
+
+            
+                <div>Choose a dungeon size:</div>
+                <select id="sizePick">
+                    <option value="small">Small</option>
+                    <option value="medium">Medium</option>
+                    <option value="large">Large</option>
+                </select>
+            
+
+            <div style="margin: 20px">
+                <fieldset class="controlGroup verticalStacking">
+                    <legend class="controlGroupName">Choose your dungeon accessories:</legend>
+                    <label><input id="traps" type="checkbox" class="DungeonBox" />Traps (<b><span style="color:red">Red</span></b>)</label><br />
+                    <label><input id="treasure" type="checkbox" class="DungeonBox" />Treasure (<b><span style="color:purple">Purple</span></b>)</label><br />
+                    <label><input id="encounter" type="checkbox" class="DungeonBox" />Enemies (<b><span style="color:green">Green</span></b>)</label>
+                </fieldset>
+            </div>
+
+            <button id="dungButton">Generate a dungeon!</button>
+            <button id="itemButton">Populate your dungeon!</button>
+            <button id="saveButton">Save your dungeon!</button>
+            <br />
+          
+            <canvas id="dungeonMap" width="500" height="400"></canvas>
+
+            </section>
+        </div>
+</body>
+</html>
