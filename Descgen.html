@@ -1,0 +1,64 @@
+<!--This Source Code Form is subject to the terms of 
+    the Mozilla Public License, v. 2.0. 
+    If a copy of the MPL was not distributed with this file,
+    You can obtain one at http://mozilla.org/MPL/2.0/. -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>App3</title>
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.2.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.2.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.2.0/js/ui.js"></script>
+
+    <!-- App3 references -->
+    <link href="/css/default.css" rel="stylesheet" />
+    <script src="/js/default.js"></script>
+</head>
+<body>
+    <div class="descpage fragment">
+        <header aria-label="Header content" role="banner">
+            <button data-win-control="WinJS.UI.BackButton"></button>
+            <h1 class="titlearea win-type-ellipsis">
+                <span class="desctitle">Description Generator</span>
+            </h1>
+        </header>
+        <br />
+        <section class="content" aria-label="Main content" role="main">
+            <div id="FileReadTextInput" data-win-control="SdkSample.ScenarioInput">
+               <p>Please find and read the <b>DescGen.txt</b> file</p>
+                <input id="fileInput" type="file" accept="text/plain" />
+                <button id="NPCOption" class="action">I want an NPC</button>
+                <button id="RoomOption" class="action">I want a room</button>
+            </div>
+            <div>Choose a race or room:</div>
+            <select id="raceChoice">
+                <option value="Random">Random</option>
+                <option value="Human">Human</option>
+                <option value="Dwarf">Dwarf</option>
+                <option value="Elf">Elf</option>
+                <option value="Gnome">Gnome</option>
+                <option value="Orc">Orc</option>
+                <option value="Halfling">Halfling</option>
+            </select>
+            <select id="roomChoice">
+                <option value="Random">Random</option>
+                <option value="Cavern">Natural Cavern</option>
+                <option value="Lair">Enemy's Lair</option>
+                <option value="Noble">Noble Building</option>
+                <option value="Wizard">Mage's Abode</option>
+                <option value="Tavern">Tavern</option>
+            </select>
+
+            <button id="Generate">Generate Description</button>
+            <div id="output1"></div>
+            <div id="output2"></div>
+            <div id="output3"></div>
+            <div id="output4"></div>
+            </section>
+        </div>
+</body>
+</html>
